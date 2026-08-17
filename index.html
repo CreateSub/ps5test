@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PS5 RENTAL — Аренда PlayStation 5</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <h1 class="brand-title">PS5 RENTAL</h1>
+    </div>
+    <div class="header-actions" id="header-actions" hidden>
+      <span class="user-chip" id="user-chip"></span>
+      <button type="button" class="btn btn-ghost" id="logout-btn">Выйти</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ========== CLIENT AUTH / LANDING ========== -->
+    <section class="auth-screen" id="auth-screen">
+      <div class="hero">
+        <p class="hero-kicker">Аренда игровой консоли</p>
+        <h2 class="hero-brand">PS5 RENTAL</h2>
+        <p class="hero-lead">PlayStation 5 от 1&nbsp;200&nbsp;₽ / сутки. Зарегистрируйтесь, выберите период аренды и оплатите картой.</p>
+      </div>
+
+      <div class="auth-panel">
+        <!-- NEW: Admin entry point -->
+        <div class="auth-tabs" role="tablist">
+          <button type="button" class="auth-tab is-active" data-tab="login" role="tab" aria-selected="true">Вход</button>
+          <button type="button" class="auth-tab" data-tab="register" role="tab" aria-selected="false">Регистрация</button>
+          <button type="button" class="auth-tab" data-tab="admin" role="tab" aria-selected="false">Админ</button>
+        </div>
+
+        <form id="login-form" class="auth-form" autocomplete="on">
+          <label class="field">
+            <span>Телефон</span>
+            <input type="text" name="login" id="login-login" placeholder="79026936225" required />
+          </label>
+          <label class="field">
+            <span>Пароль</span>
+            <input type="password" name="password" id="login-password" placeholder="••••••••" required minlength="6" />
+          </label>
+          <p class="form-hint">Клиент (тест): <strong>79026936225</strong> / <strong>12345678</strong></p>
+          <p class="form-error" id="login-error" hidden></p>
+          <button type="submit" class="btn btn-gold">Войти</button>
+        </form>
+
+        <form id="register-form" class="auth-form" hidden autocomplete="on">
+          <label class="field">
+            <span>ФИО</span>
+            <input type="text" name="name" id="reg-name" placeholder="Иванов Иван Иванович" required />
+          </label>
+          <label class="field">
+            <span>Телефон</span>
+            <input type="text" name="login" id="reg-login" placeholder="79XXXXXXXXX" required />
+          </label>
+          <label class="field">
+            <span>Пароль</span>
+            <input type="password" name="password" id="reg-password" placeholder="минимум 6 символов" required minlength="6" />
+          </label>
+          <label class="field">
+            <span>Повторите пароль</span>
+            <input type="password" name="password2" id="reg-password2" required minlength="6" />
+          </label>
+          <p class="form-error" id="register-error" hidden></p>
+          <button type="submit" class="btn btn-gold">Зарегистрироваться</button>
+        </form>
+
+        <!-- NEW: Admin login form (section 1) -->
+        <form id="admin-login-form" class="auth-form" hidden autocomplete="on">
+          <p class="form-hint">Вход для администратора</p>
+          <label class="field">
+            <span>Телефон</span>
+            <input type="text" name="phone" id="admin-phone" placeholder="79821415152" required />
+          </label>
+          <label class="field">
+            <span>Пароль</span>
+            <input type="password" name="password" id="admin-password" placeholder="••••••••" required />
+          </label>
+          <p class="form-hint">Админ (тест): <strong>79821415152</strong> / <strong>1234567890</strong></p>
+          <p class="form-error" id="admin-login-error" hidden></p>
+          <button type="submit" class="btn btn-gold">Войти в панель</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ========== CLIENT BOOKING (after auth) ========== -->
+    <section class="booking-screen" id="booking-screen" hidden>
+      <div class="booking-intro">
+        <h2>Оформление аренды</h2>
+        <p>Минимум 24 часа. Выберите начало и конец периода или заполните неделю. Тарифы лояльности применяются автоматически.</p>
+      </div>
+
+      <div class="booking-grid">
+        <div class="calendar-panel">
+          <!-- NEW: Calendar mode controls (section 3) -->
+          <div class="calendar-modes" id="calendar-modes">
+            <button type="button" class="mode-btn is-active" data-mode="range">Период (начало → конец)</button>
+            <button type="button" class="mode-btn" data-mode="week" id="fill-week-btn">Заполнить неделю</button>
+          </div>
+          <p class="calendar-hint" id="calendar-hint">Выберите дату начала — конец по умолчанию +1 день (24 ч).</p>
+
+          <div class="calendar-nav">
+            <button type="button" class="btn btn-icon" id="prev-month" aria-label="Предыдущий месяц">‹</button>
+            <h3 id="calendar-month-label"></h3>
+            <button type="button" class="btn btn-icon" id="next-month" aria-label="Следующий месяц">›</button>
+          </div>
+          <div class="calendar-weekdays" aria-hidden="true">
+            <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
+          </div>
+          <div class="calendar-days" id="calendar-days"></div>
+          <div class="calendar-legend">
+            <span><i class="dot available"></i> Свободно</span>
+            <span><i class="dot selected"></i> Период</span>
+            <span><i class="dot range-end"></i> Начало / конец</span>
+            <span><i class="dot booked"></i> Занято</span>
+            <span><i class="dot past"></i> Недоступно</span>
+          </div>
+          <button type="button" class="btn btn-ghost btn-block" id="clear-range-btn">Сбросить даты</button>
+        </div>
+
+        <div class="checkout-panel">
+          <div class="order-summary">
+            <h3>Ваш заказ</h3>
+            <ul class="selected-dates" id="selected-dates-list">
+              <li class="empty">Период не выбран</li>
+            </ul>
+            <div class="total-row">
+              <span>Итого</span>
+              <strong id="total-price">0 ₽</strong>
+            </div>
+            <p class="rate-note" id="pricing-note">Тариф: 1 дн. — 1&nbsp;200&nbsp;₽ · 2 — 2&nbsp;000 · 3 — 2&nbsp;700 · далее 700/дн. · после 7 дн. — 600/дн.</p>
+          </div>
+
+          <form id="payment-form" class="payment-form">
+            <!-- NEW: Delivery vs Pickup (section 5) -->
+            <fieldset class="fulfillment">
+              <legend>Способ получения</legend>
+              <label class="radio-row">
+                <input type="radio" name="fulfillment" value="delivery" id="opt-delivery" checked />
+                <span>Доставка</span>
+              </label>
+              <label class="radio-row">
+                <input type="radio" name="fulfillment" value="pickup" id="opt-pickup" />
+                <span>Самовывоз</span>
+              </label>
+              <div id="delivery-address-wrap">
+                <label class="field">
+                  <span>Адрес доставки</span>
+                  <input type="text" id="delivery-address" name="deliveryAddress" placeholder="Город, улица, дом, квартира" />
+                </label>
+              </div>
+              <p class="pickup-note" id="pickup-note" hidden>
+                Пункт самовывоза: г. Казань, ул. Баумана, 15 (Пн–Вс 11:00–21:00)
+              </p>
+            </fieldset>
+
+            <h3>Оплата картой</h3>
+            <label class="field">
+              <span>Номер карты</span>
+              <input type="text" id="card-number" name="cardNumber" inputmode="numeric" placeholder="ACCT-000003" maxlength="19" required autocomplete="cc-number" />
+            </label>
+            <div class="field-row">
+              <label class="field">
+                <span>Срок</span>
+                <input type="text" id="card-expiry" name="cardExpiry" placeholder="ММ/ГГ" maxlength="5" required autocomplete="cc-exp" />
+              </label>
+              <label class="field">
+                <span>CVV</span>
+                <input type="password" id="card-cvv" name="cardCvv" inputmode="numeric" placeholder="•••" maxlength="4" required autocomplete="cc-csc" />
+              </label>
+            </div>
+            <label class="field">
+              <span>Имя на карте</span>
+              <input type="text" id="card-name" name="cardName" placeholder="IVAN IVANOV" required autocomplete="cc-name" />
+            </label>
+
+            <!-- NEW: Terms & Conditions (section 6) -->
+            <div class="terms-block">
+              <h3>Условия использования (оферта)</h3>
+              <div class="terms-text" tabindex="0">
+                <p>1. Арендодатель передаёт, а Арендатор принимает во временное пользование игровую консоль PlayStation 5 с комплектацией, указанной при оформлении заказа.</p>
+                <p>2. Минимальный срок аренды — 24 часа. Стоимость рассчитывается по действующему тарифу лояльности в зависимости от длительности.</p>
+                <p>3. Арендатор обязуется бережно относиться к оборудованию, не вскрывать корпус и не передавать консоль третьим лицам без согласия Арендодателя.</p>
+                <p>4. При повреждении или утрате оборудования Арендатор возмещает стоимость ремонта или полную стоимость комплекта.</p>
+                <p>5. Оплата производится банковской картой до начала аренды. Возврат при отмене — по правилам, указанным в полной оферте.</p>
+                <p>6. Самовывоз осуществляется по адресу пункта выдачи. При доставке Арендатор указывает актуальный адрес и обеспечивает доступ курьера.</p>
+              </div>
+              <label class="checkbox-row">
+                <input type="checkbox" id="terms-agree" name="termsAgree" />
+                <span>Я согласен с условиями использования (офертой)</span>
+              </label>
+            </div>
+
+            <p class="form-error" id="payment-error" hidden></p>
+            <button type="submit" class="btn btn-gold" id="pay-btn" disabled>Оплатить</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== ADMIN DASHBOARD (section 2) ========== -->
+    <section class="admin-screen" id="admin-screen" hidden>
+      <div class="booking-intro">
+        <h2>Панель администратора</h2>
+        <p>Активные заказы и база клиентов.</p>
+      </div>
+
+      <div class="admin-tabs" role="tablist">
+        <button type="button" class="admin-tab is-active" data-admin-tab="orders">Активные заказы</button>
+        <button type="button" class="admin-tab" data-admin-tab="clients">База клиентов</button>
+      </div>
+
+      <div id="admin-orders-panel" class="admin-panel">
+        <div class="table-wrap">
+          <table class="data-table" id="orders-table">
+            <thead>
+              <tr>
+                <th>ID заказа</th>
+                <th>Клиент</th>
+                <th>Начало</th>
+                <th>Конец</th>
+                <th>Статус</th>
+                <th>Сумма</th>
+              </tr>
+            </thead>
+            <tbody id="orders-tbody">
+              <tr><td colspan="6" class="empty-cell">Заказов пока нет</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="admin-clients-panel" class="admin-panel" hidden>
+        <div class="table-wrap">
+          <table class="data-table" id="clients-table">
+            <thead>
+              <tr>
+                <th>ФИО</th>
+                <th>Телефон</th>
+              </tr>
+            </thead>
+            <tbody id="clients-tbody">
+              <tr><td colspan="2" class="empty-cell">Клиентов пока нет</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" hidden role="status"></div>
+
+  <div class="modal" id="success-modal" hidden>
+    <div class="modal-card">
+      <div class="modal-icon" aria-hidden="true">✓</div>
+      <h3>Аренда оформлена</h3>
+      <p id="success-text"></p>
+      <button type="button" class="btn btn-gold" id="success-close">Готово</button>
+    </div>
+  </div>
+
+  <!-- Backend-style modules (pricing + admin auth) then UI -->
+  <script src="js/pricing.js"></script>
+  <script src="js/backend.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
