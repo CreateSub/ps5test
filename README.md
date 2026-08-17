@@ -1,17 +1,3 @@
-# PS5 Rental
-
-Gray & gold PlayStation 5 rental site with client booking and admin dashboard.
-
-## Run
-
-Open `index.html` in a browser.
-
-## Test credentials
-
-| Role   | Phone       | Password   |
-|--------|-------------|------------|
-| Client | 79026936225 | 12345678   |
-| Admin  | 79821415152 | 1234567890 |
 
 ---
 
